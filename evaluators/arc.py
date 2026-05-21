@@ -164,6 +164,16 @@ class ARC:
                 
                 submission[name].append({f"attempt_{i + 1}": grid.tolist() for i, grid in enumerate(pred_grids)})
 
+                # ----- TRM ensemble: collect top-N grids for this test -----
+                top_n_grids = []
+                for h, stats in p_map[:TRM_TOP_N]:
+                    for hmap, preds in global_hmap_preds:  # type: ignore
+                        if h in hmap:
+                            top_n_grids.append(hmap[h].tolist())
+                            break
+                trm_attempts.setdefault(name, []).append(top_n_grids)
+                # ----- end TRM ensemble block -----
+
             # Total correctness
             for i in range(len(self.pass_Ks)):
                 correct[i] += num_test_correct[i] / len(puzzle["test"])
@@ -172,6 +182,8 @@ class ARC:
         if save_path is not None:
             with open(os.path.join(save_path, "submission.json"), "w") as f:
                 json.dump(submission, f)
+            with open(os.path.join(save_path, "trm_attempts.json"), "w") as f:
+                json.dump(trm_attempts, f)
 
         # Final result
         all_results = {f"ARC/pass@{k}": correct[i] / len(self.test_puzzles) for i, k in enumerate(self.pass_Ks)}
