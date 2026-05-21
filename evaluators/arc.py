@@ -114,6 +114,8 @@ class ARC:
             return
 
         submission = {}
+        trm_attempts = {}   # top-10 grids per test for the Qwen3 ensemble
+        TRM_TOP_N = 10
         correct = [0.0 for _ in range(len(self.pass_Ks))]
 
         for name, puzzle in self.test_puzzles.items():
