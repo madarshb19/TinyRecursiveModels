@@ -41,7 +41,7 @@ class ARC:
     
     def __init__(self, data_path: str, 
         eval_metadata: PuzzleDatasetMetadata, 
-        submission_K: int = 2, 
+        submission_K: int = 10, 
         pass_Ks: Sequence[int] = (1, 2, 5, 10, 100, 1000), 
         aggregated_voting: bool = True):
         super().__init__()
